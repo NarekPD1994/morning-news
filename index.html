@@ -473,6 +473,7 @@ function observe(){document.querySelectorAll(".rv").forEach(el=>{if(!io||seen.ha
 const isRead=i=>!!(S.mine[i.id]||{}).read, isSaved=i=>!!(S.mine[i.id]||{}).saved;
 function base(){
   let a=vis(S.items);
+  if(S.q&&(S.view==="today"||S.view==="unread"))return a;
   if(S.view==="today")a=a.filter(i=>i.date===latest()&&!i.backfill);
   if(S.view==="unread")a=a.filter(i=>!i.backfill&&!isRead(i));
   if(S.view==="saved")a=a.filter(isSaved);
@@ -531,7 +532,7 @@ function hero(){
     $("hero").innerHTML=`<div class="hero rv" data-k="hero-sources" style="padding-bottom:20px"><span class="eyebrow"><i></i>Sources</span><h1 class="ht" style="margin-top:22px">Where your news <em>comes from</em></h1><p class="lede">Every story links to its original page. See which publications have supplied your brief, or the people and publications Claude checks every morning.</p>
     <div class="months" role="group" aria-label="Source view"><button class="mp" data-srcmode="used" aria-pressed="${S.srcMode==="used"}">Used in your brief<span>${used}</span></button><button class="mp" data-srcmode="followed" aria-pressed="${S.srcMode==="followed"}">Followed list<span>${S.sources.length}</span></button></div></div>`;return}
   if(S.view==="archive"){const ms=months(),cm=curMonth();
-    $("hero").innerHTML=`<div class="hero rv" data-k="hero-archive" style="padding-bottom:20px"><span class="eyebrow"><i></i>Archive</span><h1 class="ht" style="margin-top:22px">Every story, <em>kept</em></h1><p class="lede">${S.items.length} stories saved since January 2026. Pick a month, then a week, or search everything.</p>
+    $("hero").innerHTML=`<div class="hero rv" data-k="hero-archive" style="padding-bottom:20px"><span class="eyebrow"><i></i>Archive</span><h1 class="ht" style="margin-top:22px">Every story, <em>kept</em></h1><p class="lede">${S.items.length} stories saved since ${(()=>{const d=S.items.reduce((m,i)=>i.date&&i.date<m?i.date:m,"9999");return d<"9999"?new Date(d+"T00:00:00").toLocaleDateString("en-GB",{month:"long",year:"numeric"}):"the first edition"})()}. Pick a month, then a week, or search everything.</p>
     <div class="months" role="group" aria-label="Months">${ms.map(m=>`<button class="mp" data-month="${m}" aria-pressed="${m===cm}">${esc(D(m+"-01",{month:"short"}))}<span>${esc(m.slice(0,4))}</span></button>`).join("")}</div></div>`;return}
   $("hero").innerHTML=`<div class="hero rv" data-k="hero-${S.view}" style="padding-bottom:28px"><span class="eyebrow"><i></i>${esc(h[0])}</span><h1 class="ht" style="margin-top:22px">${esc(h[0])}</h1><p class="lede">${esc(h[1])}</p></div>`;
 }
@@ -567,7 +568,7 @@ function detail(i){
   ${i.must?'<span><b class="hot">Must-read</b></span>':""}
   <h2 id="shT">${esc(i.title)}</h2>
   <p class="sum">${esc(i.summary)}</p>
-  ${i.why?`<p class="why" style="--c:${tc(i.topic)}"><b>Why it matters for you</b>${esc(i.why)}</p>`:""}
+  ${i.why?`<p class="why" style="--c:${tc(i.topic)}"><b>${S.isOwner?"Why it matters for you":"Why "+esc(ownerName())+" picked it"}</b>${esc(i.why)}</p>`:""}
   ${sk?`<p class="lbl">Builds your skill · ${esc(sk.name)}</p>`:""}
   <div class="acts">
     <a class="cta" href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener" data-readon="${esc(i.id)}">Read the source<span class="ci">${ic.arrow}</span></a>
@@ -812,7 +813,7 @@ function render(){
   if(S.view==="skills"){renderSkills();observe();return}
   const a=pick();
   $("tabs").innerHTML=tabsHtml();{const t=$("tabs").querySelector('[aria-selected="true"]'),c=$("tabs").querySelector(".tabs");if(t&&c)c.scrollLeft=Math.max(0,t.offsetLeft-(c.clientWidth-t.clientWidth)/2)}
-  head(a.length,S.view==="today"?"Today's stories":S.view==="archive"?(S.q?"Search results":"Week of "+(curWeek()?wkLabel(curWeek()):"")):S.view==="saved"?"Saved":"Unread");
+  head(a.length,S.q&&S.view!=="saved"?"Search results":S.view==="today"?"Today's stories":S.view==="archive"?(S.q?"Search results":"Week of "+(curWeek()?wkLabel(curWeek()):"")):S.view==="saved"?"Saved":"Unread");
   if(!a.length){L2.innerHTML=`<div class="empty"><b>${S.items.length?(S.view==="saved"?"Nothing saved yet":S.view==="unread"?"All caught up":"Nothing here"):"No stories yet"}</b>${S.items.length?"Try another folder or clear the search.":"The first edition arrives at 8:00."}</div>`;observe();return}
   let out="",last="";
   const wk=S.view==="archive"&&!S.q&&S.weeks[curWeek()];
@@ -910,7 +911,7 @@ document.addEventListener("click",async e=>{
   if(e.target.closest("[data-profile]")){openP();return}
   if(e.target.closest("[data-pclose]")){closeP();return}
   const gs=e.target.closest("[data-gstep]");if(gs){const fm=gs.closest("form");if(fm)gFromForm(fm);const to=+gs.dataset.gstep;if(to>(S.gstep||0)&&(S.gstep||0)===0&&!gDraft().name){msg("guest","Add your name first.");const n=fm&&fm.querySelector("[name=g_name]");n&&n.focus();return}S.gstep=to;renderPModal();$("pbody").scrollTop=0;const f=$("pbody").querySelector("input,textarea");f&&f.focus();return}
-  if(e.target.closest("[data-gskip]")){S.gSkipped=true;S.pDirty=false;closeP();return}
+  if(e.target.closest("[data-gskip]")){S.gSkipped=true;S.pDirty=false;closeP();const v={...(GU()||{}),skipped:true};S.mine.profile=v;if(db&&uid)db.collection("data/users/"+uid).doc("profile").set(v).catch(()=>{});return}
   if(e.target.closest("[data-greset]")){S.gd={name:(GU()||{}).name||"",role:(GU()||{}).role||"",priority:{}};S.gstep=0;S.ptab="welcome";S.pDirty=false;renderPModal();return}
   const pt=e.target.closest("[data-ptab]");if(pt){if(S.pDirty&&!confirmLeave())return;S.ptab=pt.dataset.ptab;S.pDirty=false;renderPModal();$("pbody").scrollTop=0;return}
   const cp=e.target.closest("[data-copy]");if(cp){const t=cp.dataset.copy==="link"?PAGE_URL:inviteText();const ok=await copyText(t);if(!ok){const b=document.querySelector(".copybox");if(b){b.value=t;b.focus();b.select()}}msg("copy",ok?"Copied.":"Select the text below and copy it.");return}
@@ -1019,7 +1020,7 @@ render();
   try{const u=await claude.use("user");uid=u?await u.id():null;S.isOwner=u?!!(await u.isOwner()):false}catch(e){uid=null}
   if(S.isOwner)db.doc("config/profile").onSnapshot(d=>{S.profile=d.exists?d.data():{};render()},()=>{});
   render();
-  if(uid)db.collection("data/users/"+uid).onSnapshot(s=>{const o={};s.docs.forEach(d=>o[d.id]=d.data());S.mine=o;render();if(!S.isOwner&&!S.gChecked){S.gChecked=true;const g=GU();if((!g||!g.done)&&!S.gSkipped&&!S.pOpen){S.gstep=0;openP("welcome")}}},()=>{});
+  if(uid)db.collection("data/users/"+uid).onSnapshot(s=>{const o={};s.docs.forEach(d=>o[d.id]=d.data());S.mine=o;render();if(!S.isOwner&&!S.gChecked){S.gChecked=true;const g=GU();if((!g||(!g.done&&!g.skipped))&&!S.gSkipped&&!S.pOpen){S.gstep=0;openP("welcome")}}},()=>{});
 })();
 }
 </script>

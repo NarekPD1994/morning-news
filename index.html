@@ -73,6 +73,38 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.4;stro
 /* shelf of folders */
 .shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));max-width:980px;margin:0 auto;gap:clamp(18px,3vw,36px) clamp(14px,2.4vw,28px);padding:12px 0 clamp(40px,6vw,72px)}
 .shelf[hidden]{display:none}
+.vbadge{position:absolute;top:8px;right:8px;z-index:3;display:inline-flex;align-items:center;gap:3px;height:24px;padding:0 7px;border-radius:999px;background:var(--dark);color:var(--ondark);font-size:11px;font-weight:500}
+.vbadge svg{width:12px;height:12px}
+.fold.mf .fa{position:relative}
+.vhint{margin:8px 0 0}
+.vpeople{margin-top:10px;display:grid;gap:10px}.vpeople[hidden]{display:none}
+.pchips{display:flex;flex-wrap:wrap;gap:6px}
+.pchip{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px 0 5px;border-radius:999px;background:var(--card);box-shadow:0 0 0 1px var(--hair);cursor:pointer;font-size:14px}
+.pchip input{position:absolute;opacity:0;width:1px;height:1px}
+.pchip:has(input:checked){background:var(--dark);color:var(--ondark);box-shadow:none}
+.pchip:has(input:focus-visible){outline:2px solid var(--dark);outline-offset:2px}
+.avatar.xs{width:28px;height:28px;font-size:11px;cursor:default;box-shadow:none}.avatar.xs:hover{transform:none}
+.addp{display:flex;gap:8px}.addp input{flex:1;min-width:0;height:42px;border-radius:14px;border:0;background:var(--card);box-shadow:0 0 0 1px var(--hair);padding:0 14px;font:inherit;font-size:15px}
+.pplsec{display:grid;gap:12px;margin-top:8px}
+.plist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.plist li{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:8px 8px 8px 10px;border-radius:18px;background:var(--shell)}
+.pmeta{display:grid;min-width:0}.pmeta b{font-weight:500}.pmeta .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill.sm{height:34px;padding:0 12px;font-size:13px}
+
+.avatar .avimg{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.avatar.hasimg{background:var(--shell)!important}
+.avatar .avemo{font-size:24px;line-height:1;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.avatar.lg .avemo{font-size:44px}
+button.avatar.lg.edit{cursor:pointer}button.avatar.lg.edit:hover{transform:scale(1.03)}
+.avbadge{position:absolute;right:-2px;bottom:-2px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--dark);color:var(--ondark);box-shadow:0 0 0 3px var(--card)}
+.avbadge svg{width:13px!important;height:13px!important}
+.aved{display:grid;gap:12px;justify-items:center;margin-top:12px;padding:14px;border-radius:22px;background:var(--shell);width:min(460px,100%);box-sizing:border-box}
+.aved .avrow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.aved .emob{width:38px;height:38px;font-size:20px}.aved .emob.on{box-shadow:0 0 0 2px var(--dark)}
+.avsw{all:unset;cursor:pointer;width:28px;height:28px;border-radius:50%;box-shadow:0 0 0 2px var(--card),0 0 0 3px var(--hair);transition:transform .3s var(--spring)}.avsw:hover{transform:scale(1.1)}.avsw.on{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--dark)}
+.aved .avup{position:relative;cursor:pointer;overflow:hidden}.aved .avup input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.aved .avup:focus-within{box-shadow:0 0 0 2px var(--dark)}
+.aved .acts{justify-content:center}
+
 .gwiz .pin{display:grid;gap:14px}
 .gdots{display:flex;gap:6px}.gdots i{width:22px;height:5px;border-radius:9px;background:var(--hair);transition:background .4s var(--e),width .5s var(--e)}.gdots i.on{background:var(--dark);width:34px}
 .gtitle{font:400 clamp(30px,5vw,40px)/1.05 "Instrument Serif",serif;letter-spacing:-.01em;margin:6px 0 0;text-wrap:balance}
@@ -358,18 +390,37 @@ footer{max-width:820px;margin:56px auto 0;text-align:center;color:var(--sub);fon
 </div>
 <nav class="dock" id="dock" aria-label="Views"></nav>
 <div class="pmodal" id="pmodal" aria-hidden="true"><div class="scrim" data-pclose></div><div class="ppanel" role="dialog" aria-modal="true" aria-labelledby="pmT"><div class="pcore2">
-  <div class="pmhead"><span class="avatar lg" id="pmAvatar" aria-hidden="true"></span><div class="pmt"><h2 id="pmT">Your profile</h2><span class="lbl" id="pmSub"></span><p class="pmbio" id="pmBio" hidden></p></div><button class="ib pmx" data-pclose aria-label="Close profile"><svg class="i" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="pmhead"><button type="button" class="avatar lg" id="pmAvatar" aria-label="Change your picture"></button><div class="pmt"><h2 id="pmT">Your profile</h2><span class="lbl" id="pmSub"></span><p class="pmbio" id="pmBio" hidden></p><div id="pmAvEdit"></div></div><button class="ib pmx" data-pclose aria-label="Close profile"><svg class="i" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="ptabs tabs" role="tablist" aria-label="Profile sections" id="ptabs"></div>
   <div class="pbody" id="pbody" role="tabpanel"></div></div></div></div>
 <div class="sheet" id="sheet" aria-hidden="true"><div class="scrim" data-close></div><div class="panel" role="dialog" aria-modal="true" aria-labelledby="shT"><div class="pcore" id="sheetBody"></div></div></div>
 
 <script>/* Public build: replaces the Claude page APIs with a static feed.json and this browser's storage. */
 (()=>{
-const KEY="mb_mine_v1";
+const KEY="mb_mine_v1",AK="mb_access_v1";
 const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return {}}};
 const save=o=>{try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}};
 let mine=load(),subs=[];
-const feed=fetch("feed.json?v="+Date.now(),{cache:"no-store"}).then(r=>r.json()).catch(()=>({}));
+function readKey(){
+  const m=/[#&]k=([0-9a-f]+)\.([A-Za-z0-9_-]+)/.exec(location.hash||"");
+  if(m){try{localStorage.setItem(AK,m[1]+"."+m[2])}catch(e){}try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}return [m[1],m[2]]}
+  try{const v=localStorage.getItem(AK);if(v){const i=v.indexOf(".");return [v.slice(0,i),v.slice(i+1)]}}catch(e){}
+  return null;
+}
+const ub=s=>{s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";return Uint8Array.from(atob(s),c=>c.charCodeAt(0))};
+async function unlock(f){
+  const k=readKey();if(!k||!crypto.subtle)return;
+  try{
+    const r=await fetch("p/"+k[0]+".json?v="+Date.now(),{cache:"no-store"});
+    if(!r.ok){if(r.status===404){try{localStorage.removeItem(AK)}catch(e){}}return}
+    const enc=await r.json(),key=await crypto.subtle.importKey("raw",ub(k[1]),"AES-GCM",false,["decrypt"]);
+    const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:ub(enc.iv)},key,ub(enc.ct));
+    const d=JSON.parse(new TextDecoder().decode(pt));
+    const seen=new Set((f.items||[]).map(i=>i.id));f.items=(f.items||[]).concat((d.items||[]).filter(i=>!seen.has(i.id)));
+    f.meta=(f.meta||[]).concat([{id:"access",name:d.name||"",topics:d.topics||[]}]);
+  }catch(e){}
+}
+const feed=fetch("feed.json?v="+Date.now(),{cache:"no-store"}).then(r=>r.json()).catch(()=>({})).then(async f=>{await unlock(f);return f});
 const snap=docs=>({size:docs.length,metadata:{fromCache:false},docs:docs.map(d=>({id:d.id,exists:true,data:()=>d}))});
 function col(path){
   const user=path.startsWith("data/users/");
@@ -431,6 +482,8 @@ const ic={
  profile:'<svg class="i f" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.5"/><path d="M3.5 20.2C4.6 16.3 7.9 14 12 14s7.4 2.3 8.5 6.2a1 1 0 0 1-1 1.3h-15a1 1 0 0 1-1-1.3Z"/></svg>',
  x:'<svg class="i" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 6l12 12M18 6 6 18"/></svg>'};
 const TP={
+ lock:'<path fill-rule="evenodd" d="M12 2.5A4.5 4.5 0 0 0 7.5 7v2.5H7A2.5 2.5 0 0 0 4.5 12v7A2.5 2.5 0 0 0 7 21.5h10a2.5 2.5 0 0 0 2.5-2.5v-7A2.5 2.5 0 0 0 17 9.5h-.5V7A4.5 4.5 0 0 0 12 2.5Zm2.5 7V7a2.5 2.5 0 0 0-5 0v2.5h5Z"/>',
+ pen:'<path d="M16.6 3.3a2.4 2.4 0 0 1 3.4 0l.7.7a2.4 2.4 0 0 1 0 3.4L9.6 18.5l-5 1.4a.8.8 0 0 1-1-1l1.4-5L16.6 3.3Z"/>',
  ai:'<path d="M12 2.5c.5 0 .9.3 1 .8l1.2 4.3a3 3 0 0 0 2.1 2.1l4.3 1.2a1 1 0 0 1 0 2l-4.3 1.2a3 3 0 0 0-2.1 2.1L13 20.5a1 1 0 0 1-2 0l-1.2-4.3a3 3 0 0 0-2.1-2.1l-4.3-1.2a1 1 0 0 1 0-2l4.3-1.2a3 3 0 0 0 2.1-2.1L11 3.3c.1-.5.5-.8 1-.8Z"/><path d="m19 1.5.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6.6-1.7Z"/>',
  design:'<path fill-rule="evenodd" d="M12 2 5.4 9.4l2.4 9.1h8.4l2.4-9.1L12 2Zm0 7.4a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/><rect x="7.5" y="19.6" width="9" height="2.4" rx="1.2"/>',
  eng:'<path fill-rule="evenodd" d="M5 3.5h14A2.5 2.5 0 0 1 21.5 6v12a2.5 2.5 0 0 1-2.5 2.5H5A2.5 2.5 0 0 1 2.5 18V6A2.5 2.5 0 0 1 5 3.5Zm2.3 5.2a.9.9 0 0 0-.1 1.3L9 12l-1.8 2a.9.9 0 1 0 1.3 1.2l2.4-2.6a.9.9 0 0 0 0-1.2L8.5 8.8a.9.9 0 0 0-1.2-.1Zm5 5.4a.9.9 0 0 0 0 1.8h4a.9.9 0 0 0 0-1.8h-4Z"/>',
@@ -546,7 +599,7 @@ function shelf(){
     out=Object.keys(T).map(k=>{const n=S.sources.filter(s=>s.topic===k).length;return n?folder(`data-t="${k}"`,T[k],`${n} sources`,[],[tc(k),tc(k)],S.topic===k,k):""}).join("");
   }else if(S.view!=="skills"){
     const b=base();
-    const gp=(GU()||{}).priority||{};out=Object.keys(T).filter(k=>gp[k]!=="off").sort((x,y)=>(PRW[gp[x]]??1)-(PRW[gp[y]]??1)).map(k=>{const its=sortItems(b.filter(i=>i.topic===k));return folder(`data-t="${k}"`,T[k],its.length?`${its.length} ${S.view==="today"?"today":"stories"}`:"Nothing yet",its.slice(0,2),[tc(k),tc(k)],S.topic===k,k)}).join("");
+    const gp=(GU()||{}).priority||{};out=Object.keys(T).filter(k=>gp[k]!=="off"&&canSeeTopic(k)).sort((x,y)=>(PRW[gp[x]]??1)-(PRW[gp[y]]??1)).map(k=>{const its=sortItems(b.filter(i=>i.topic===k));return folder(`data-t="${k}"`,T[k],its.length?`${its.length} ${S.view==="today"?"today":"stories"}`:"Nothing yet",its.slice(0,2),[tc(k),tc(k)],S.topic===k,k)}).join("");
   }
   $("shelf").innerHTML=out;$("shelf").hidden=!out;
 }
@@ -649,6 +702,7 @@ function profileSections(){
     <span class="lbl" data-msg="copy"></span>
    </div>
    <textarea class="copybox" readonly rows="3" aria-label="Invite message">${esc(inviteText())}</textarea>
+   ${peopleSection()}
    <div class="why" style="--c:#ec5c9a"><b>What people you invite get</b>Today's stories, folders, archive, sources and skill map, updated every morning. Their answers, reads and saves stay in their own browser. Nobody else can see them, you included. Your profile, goal and algorithm settings stay here, private to you.</div>
   </div></section>`;
   return {sec,ro,mineN:mine.length,catN:Object.keys(T).length};
@@ -673,7 +727,7 @@ function catSection(own,custom){
   const cats=Object.keys(T),d=S.catDraft||(S.catDraft=freshDraft()),ed=S.catEdit,iv=String(d.icon||""),mode=d.mode||(iv.startsWith("emoji:")?"emoji":iv.startsWith("img:")?"image":"icon");
   const tiles=(own?`<button type="button" class="fold mf newf${!ed?" act":""}" data-catnew aria-pressed="${!ed}"><span class="fa newfa"><span class="plusc"><svg class="i" viewBox="0 0 24 24">${TP.plus}</svg></span></span><span class="fn">New folder</span><span class="fc">Create your own</span></button>`:"")
    +cats.map(k=>{const cu=!BUILTIN.includes(k),items=sortItems(S.items.filter(i=>i.topic===k)).slice(0,2);
-     return `<button type="button" class="fold mf${ed===k?" act":""}" ${own?`data-catpick="${k}"`:`data-catbuiltin="${k}"`} aria-pressed="${ed===k}" style="--c:${tc(k)}">${folderVis({color:tc(k),icon:TIK[k]||k,papers:items})}<span class="fn">${esc(T[k])}</span><span class="fc">${own?(cu?"Yours · tap to edit":"Built-in · tap to edit"):(cu?"Custom":"Built-in")}</span></button>`}).join("");
+     return `<button type="button" class="fold mf${ed===k?" act":""}" ${own?`data-catpick="${k}"`:`data-catbuiltin="${k}"`} aria-pressed="${ed===k}" style="--c:${tc(k)}">${visBadge(k)}${folderVis({color:tc(k),icon:TIK[k]||k,papers:items})}<span class="fn">${esc(T[k])}</span><span class="fc">${own?(cu?"Yours · tap to edit":"Built-in · tap to edit"):(cu?"Custom":"Built-in")}</span></button>`}).join("");
   const edName=ed&&catOf(ed)?catOf(ed).name:"";
   return `<div class="psec pcat"><div class="pin">
    <div class="catrow" role="list" aria-label="Folders">${tiles}</div>
@@ -690,6 +744,7 @@ function catSection(own,custom){
       <div data-panel="emoji"${mode==="emoji"?"":" hidden"}><div class="emorow">${EMOJIS.map(x=>`<button type="button" class="emob" data-emo="${x}" aria-label="Use ${x}">${x}</button>`).join("")}</div><label class="fl"><span>Or type or paste any emoji</span><input name="cemoji" value="${iv.startsWith("emoji:")?esc(iv.slice(6)):""}" maxlength="8" placeholder="e.g. 🦊" autocomplete="off"></label></div>
       <div data-panel="image"${mode==="image"?"":" hidden"}><label class="upl"><input type="file" name="cimg" accept="image/png,image/jpeg,image/webp,image/svg+xml"><span class="ti sm2">${iv.startsWith("img:")?iconHTML(iv):`<svg class="i" viewBox="0 0 24 24">${TP.plus}</svg>`}</span><span><b>Upload an image</b><br><span class="lbl">PNG, JPG, WebP or SVG. It's cropped to a square.</span></span></label></div>
      </div>
+     ${visBlock(d)}
      <div class="acts"><button class="cta" type="submit">${ed?"Save changes":"Create folder"}<span class="ci">${ic.check}</span></button>${ed?`<button type="button" class="pill" data-catcancel>Cancel</button>${BUILTIN.includes(ed)?(catOf(ed)?`<button type="button" class="pill" data-delcat="${ed}">Reset to default</button>`:""):`<button type="button" class="pill danger" data-delcat="${ed}"><svg class="i" viewBox="0 0 24 24">${TP.trash}</svg>Delete</button>`}`:""}<span class="lbl" data-msg="cat"></span></div>
     </div></div></form>`:`<span class="lbl" data-msg="cat"></span>`}
   </div></div>`;
@@ -698,6 +753,8 @@ function draftFromForm(fm,t){
   const d=S.catDraft||(S.catDraft=freshDraft()),v=n=>{const el=fm.querySelector(`[name="${n}"]:checked`);return el?el.value:""};
   d.name=fm.querySelector('[name=cname]').value;d.desc=fm.querySelector('[name=cdesc]').value;
   if(t&&t.name==="ccustom"){d.color=t.value;fm.querySelectorAll('[name=ccolor]').forEach(x=>x.checked=false)}else if(v("ccolor"))d.color=v("ccolor");
+  d.vis=v("cvis")||"everyone";d.people=[...fm.querySelectorAll("[name=cpeople]:checked")].map(x=>x.value);
+  {const vp=fm.querySelector(".vpeople");if(vp)vp.hidden=d.vis!=="some";const h=fm.querySelector(".vhint");if(h)h.textContent=d.vis==="everyone"?"Everyone you share the brief with sees it.":d.vis==="private"?"Only you see it. Its stories never leave your private page.":"Only the people you tick see it, through their personal link."}
   d.mode=v("cmode")||"icon";
   fm.querySelectorAll("[data-panel]").forEach(p=>p.hidden=p.dataset.panel!==d.mode);
   if(d.mode==="icon"&&v("cicon"))d.icon=v("cicon");
@@ -708,10 +765,10 @@ function readImage(file){return new Promise((res,rej)=>{const r=new FileReader()
 /* ---------- guests: onboarding, private profile, re-ranked feed ---------- */
 const GU=()=>S.isOwner?null:(S.mine.profile||S.gLocal||null);
 const PRW={high:0,normal:1};
-const hiddenT=i=>{const g=GU();return !!(g&&g.priority&&g.priority[i.topic]==="off")};
+const hiddenT=i=>{if(!canSeeTopic(i.topic))return true;const g=GU();return !!(g&&g.priority&&g.priority[i.topic]==="off")};
 const vis=a=>a.filter(i=>!hiddenT(i));
 const ownerName=()=>S.ownerName||"Narek";
-const gDraft=()=>S.gd||(S.gd={...(GU()||{}),priority:{...((GU()||{}).priority||{})}});
+const gDraft=()=>S.gd||(S.gd={name:(S.access||{}).name||"",...(GU()||{}),priority:{...((GU()||{}).priority||{})}});
 function gFromForm(fm){
   const d=gDraft(),F=new FormData(fm);
   ["name","role","more"].forEach(k=>{if(fm.querySelector(`[name="g_${k}"]`))d[k]=String(F.get("g_"+k)||"").trim()});
@@ -724,7 +781,7 @@ function seg(name,val,opts){return `<div class="seg" role="radiogroup">${opts.ma
 function gFields(d,parts){
   const out={};
   out.who=`<div class="fgrid"><label class="fl"><span>Your name</span><input name="g_name" value="${esc(d.name||"")}" autocomplete="name" placeholder="e.g. Anna"></label><label class="fl"><span>What you do</span><input name="g_role" value="${esc(d.role||"")}" placeholder="e.g. UX researcher"></label></div>`;
-  out.folders=`<div class="gfolders">${Object.keys(T).map(k=>`<div class="gfr" style="--c:${tc(k)}"><span class="ti sm2">${TI(k)}</span><b>${esc(T[k])}</b>${seg("gp_"+k,(d.priority||{})[k]||"normal",[["high","More"],["normal","Normal"],["off","Hide"]])}</div>`).join("")}</div>`;
+  out.folders=`<div class="gfolders">${Object.keys(T).filter(canSeeTopic).map(k=>`<div class="gfr" style="--c:${tc(k)}"><span class="ti sm2">${TI(k)}</span><b>${esc(T[k])}</b>${seg("gp_"+k,(d.priority||{})[k]||"normal",[["high","More"],["normal","Normal"],["off","Hide"]])}</div>`).join("")}</div>`;
   out.read=`<div class="fl"><span>How should stories read?</span>${seg("g_level",d.level||"simple",[["simple","Just headlines"],["detailed","Headline + short summary"]])}</div>
    <div class="fl"><span>How many stories a day?</span>${seg("g_count",d.count||0,[[5,"Top 5"],[10,"Top 10"],[0,"All of them"]])}</div>`;
   out.more=`<label class="fl"><span>Anything you want more of? <em class="opt">Optional</em></span><textarea name="g_more" rows="3" placeholder="e.g. design systems, AI agents, case studies from banks">${esc(d.more||"")}</textarea></label>`;
@@ -768,10 +825,75 @@ async function saveGuest(d,okText){
   if(db&&uid){try{await db.collection("data/users/"+uid).doc("profile").set(v);S.mine.profile=v;saved=true}catch(e){}}
   return saved;
 }
+/* ---------- avatars: photo, emoji or coloured initials ---------- */
+const AV_EMO=["😀","😎","🦊","🐼","🐱","🦁","🌸","🌊","🚀","🎨","☕","⚡"];
+const AV_BG=["","#8b7cf6","#4f8df7","#2bb5a5","#30b46c","#f5a524","#ff7a66","#ec5c9a","#1c1c1e"];
+function avSrc(){return S.isOwner?(S.profile||{}):(GU()||{})}
+function avInner(o,fallbackName){o=o||{};const v=String(o.avatar||"");
+  if(/^img:data:image\//.test(v))return `<img class="avimg" src="${esc(v.slice(4))}" alt="">`;
+  if(v.startsWith("emoji:"))return `<span class="avemo">${esc(v.slice(6))}</span>`;
+  const n=o.name||fallbackName;return n?`<span>${esc(initials(n))}</span>`:iconHTML("user")}
+function avPaint(el,o,fallbackName){if(!el)return;o=o||{};const v=String(o.avatar||"");el.style.background=o.avatarBg?o.avatarBg:(v.startsWith("emoji:")?"var(--shell)":"");el.classList.toggle("hasimg",/^img:/.test(v))}
+function avEditor(){
+  const o=avSrc(),v=String(o.avatar||"");
+  return `<div class="aved" role="group" aria-label="Change your picture">
+   <label class="pill avup"><input type="file" name="avimg" accept="image/png,image/jpeg,image/webp"><svg class="i" viewBox="0 0 24 24">${TP.plus}</svg>Upload photo</label>
+   <div class="avrow">${AV_EMO.map(x=>`<button type="button" class="emob${v==="emoji:"+x?" on":""}" data-avemo="${x}" aria-label="Use ${x}">${x}</button>`).join("")}</div>
+   <div class="avrow">${AV_BG.map(c=>`<button type="button" class="avsw${(o.avatarBg||"")===c?" on":""}" data-avbg="${c}" aria-label="${c?"Background "+c:"Default background"}" style="background:${c||"radial-gradient(120% 120% at 20% 10%,#a99bff 0%,#6c7cf5 45%,#3fb6e8 100%)"}"></button>`).join("")}</div>
+   <div class="acts"><button type="button" class="cta" data-avdone>Done<span class="ci">${ic.check}</span></button>${v||o.avatarBg?`<button type="button" class="pill" data-avclear>Use my initials</button>`:""}<span class="lbl" data-msg="av"></span></div>
+  </div>`;
+}
+async function avSave(patch){
+  const now=new Date().toISOString();
+  if(S.isOwner){
+    const P={...(S.profile||{}),...patch,updatedAt:now};S.profile=P;render();renderPModal();
+    if(!db)return false;
+    try{await db.doc("config/profile").set(P);await db.doc("meta/owner").set({name:P.name||ownerName(),avatar:P.avatar||"",avatarBg:P.avatarBg||""});return true}catch(e){return false}
+  }
+  const v={...(GU()||{}),...patch,updatedAt:now};S.gLocal=v;S.mine.profile=v;render();renderPModal();
+  if(!db||!uid)return false;
+  try{await db.collection("data/users/"+uid).doc("profile").set(v);return true}catch(e){return false}
+}
+/* ---------- folder visibility and people ---------- */
+const catVis=k=>((catOf(k)||{}).visibility)||"everyone";
+function canSeeTopic(k){if(S.isOwner)return true;const v=catVis(k);if(v==="everyone")return true;return !!(S.access&&(S.access.topics||[]).includes(k))}
+function rnd(n){const a=new Uint8Array(n);crypto.getRandomValues(a);return a}
+function b64u(a){let s="";a.forEach(x=>s+=String.fromCharCode(x));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
+function newPerson(name){return {id:[...rnd(5)].map(x=>x.toString(16).padStart(2,"0")).join(""),name,key:b64u(rnd(32)),created:new Date().toISOString()}}
+const personLink=p=>`${PAGE_URL}#k=${p.id}.${p.key}`;
+const personOf=id=>(S.people||[]).find(p=>p.id===id);
+function foldersFor(id){return Object.keys(T).filter(k=>{const c=catOf(k)||{};return c.visibility==="some"&&(c.people||[]).includes(id)})}
+async function savePeople(list){S.people=list;if(!db||!S.isOwner)return false;try{await db.doc("config/people").set({list});return true}catch(e){return false}}
+function visBadge(k){const v=catVis(k);if(v==="private")return `<span class="vbadge" title="Only you">${iconHTML("lock")}</span>`;if(v==="some")return `<span class="vbadge" title="Selected people">${iconHTML("user")}<b>${((catOf(k)||{}).people||[]).length}</b></span>`;return ""}
+function visBlock(d){
+  const vis=d.vis||"everyone",ppl=S.people||[],sel=d.people||[];
+  return `<div class="fl"><span>Who can see this folder</span>
+   ${seg("cvis",vis,[["everyone","Everyone"],["private","Only me"],["some","Selected people"]])}
+   <p class="lbl vhint">${vis==="everyone"?"Everyone you share the brief with sees it.":vis==="private"?"Only you see it. Its stories never leave your private page.":"Only the people you tick see it, through their personal link."}</p>
+   <div class="vpeople"${vis==="some"?"":" hidden"}>
+    ${ppl.length?`<div class="pchips">${ppl.map(p=>`<label class="pchip"><input type="checkbox" name="cpeople" value="${esc(p.id)}"${sel.includes(p.id)?" checked":""}><span class="avatar xs">${esc(initials(p.name))}</span><span>${esc(p.name)}</span></label>`).join("")}</div>`:`<p class="lbl">No people yet. Add someone below.</p>`}
+    <div class="addp"><input name="cnewp" placeholder="Add a person by name" autocomplete="off" maxlength="40"><button type="button" class="pill" data-addperson>Add</button></div>
+   </div></div>`;
+}
+function peopleSection(){
+  const ppl=S.people||[];
+  return `<div class="pplsec"><h4 class="gsub">People with a personal link</h4>
+   <p class="lbl">A personal link opens the brief with every "Everyone" folder, plus the folders you shared with that person. Give each person their own link. New links and changes start working after the next daily site update (about 8:15 Yerevan time).</p>
+   ${ppl.length?`<ul class="plist">${ppl.map(p=>{const f=foldersFor(p.id);return `<li><span class="avatar xs">${esc(initials(p.name))}</span><div class="pmeta"><b>${esc(p.name)}</b><span class="lbl">${f.length?f.map(k=>esc(T[k])).join(", "):"Only the shared folders"}</span></div><button type="button" class="pill sm" data-copyp="${esc(p.id)}">Copy link</button><button type="button" class="ib sm" data-delp="${esc(p.id)}" aria-label="Remove ${esc(p.name)}"><svg class="i" viewBox="0 0 24 24">${TP.trash}</svg></button></li>`}).join("")}</ul>`:""}
+   <div class="addp"><input id="sharenewp" placeholder="Name, e.g. Anna" autocomplete="off" maxlength="40"><button type="button" class="pill" data-addperson="share">Add person</button></div>
+   <span class="lbl" data-msg="people"></span></div>`;
+}
 const PT=[["about","About","user"],["algo","Algorithm","sliders"],["cat","Folders","week"],["src","Sources","book"],["share","Share","share"]];
 function initials(n){n=String(n||"").trim();if(!n)return "";const p=n.split(/\s+/);return (p[0][0]+(p[1]?p[1][0]:"")).toUpperCase()}
-function avatarHtml(){const n=S.isOwner?(S.profile||{}).name:(GU()||{}).name;return n?`<span>${esc(initials(n))}</span>`:iconHTML("user")}
-function renderAvatar(){const a=$("avatarBtn");if(a)a.innerHTML=avatarHtml()+`<i class="adot"></i>`}
+function avatarHtml(){return avInner(avSrc())}
+function renderAvatar(){const a=$("avatarBtn");if(a){a.innerHTML=avatarHtml()+`<i class="adot"></i>`;avPaint(a,avSrc())}}
+function paintPmAvatar(wiz){
+  const a=$("pmAvatar");if(!a)return;
+  if(wiz){const o=S.ownerAv||{name:ownerName()};a.innerHTML=avInner(o,ownerName());avPaint(a,o);a.classList.remove("edit");a.disabled=true;a.setAttribute("aria-label",ownerName());$("pmAvEdit").innerHTML="";S.avEdit=false;return}
+  a.disabled=false;a.classList.add("edit");a.setAttribute("aria-label","Change your picture");
+  a.innerHTML=avatarHtml()+`<span class="avbadge" aria-hidden="true">${iconHTML("pen")}</span>`;avPaint(a,avSrc());
+  $("pmAvEdit").innerHTML=S.avEdit?avEditor():"";
+}
 function setBio(t){const b=$("pmBio");if(!b)return;b.textContent=t||"";b.hidden=!t}
 const GPT=[["me","Your profile","user"],["gabout","About this brief","book"]];
 function renderPModal(){
@@ -779,7 +901,7 @@ function renderPModal(){
   if(!S.isOwner){
     const g=GU(),wiz=!g||!g.done||S.ptab==="welcome";
     $("pmodal").classList.toggle("wiz",wiz);
-    $("pmAvatar").innerHTML=avatarHtml();
+    paintPmAvatar(wiz);
     $("pmT").textContent=wiz?"Welcome":(g.name||"Your profile");
     $("pmSub").textContent=wiz?`Shared by ${ownerName()}`:[g.role,"Private to you"].filter(Boolean).join(" · ");
     setBio(wiz?"":(g.more?"Wants more of: "+g.more:""));
@@ -790,7 +912,7 @@ function renderPModal(){
   }
   $("pmodal").classList.remove("wiz");
   const {sec,ro,mineN,catN}=profileSections(),P=S.profile||{};
-  $("pmAvatar").innerHTML=avatarHtml();
+  paintPmAvatar(false);
   $("pmT").textContent=S.isOwner?(P.name||"Your profile"):"Profile";
   $("pmSub").textContent=S.isOwner?[P.role,P.company,P.location].filter(Boolean).join(" · ")||"Set up your profile":"Read-only";
   setBio(S.isOwner?(P.goal||""):"");
@@ -799,9 +921,9 @@ function renderPModal(){
   $("pbody").innerHTML=ro+(sec[S.ptab]||"");
 }
 function openP(tab){S.pOpen=true;S.ptab=tab||S.ptab||"about";S.pDirty=false;lastFocus=document.activeElement;renderPModal();$("pmodal").classList.add("on");$("pmodal").setAttribute("aria-hidden","false");document.documentElement.style.overflow="hidden";setTimeout(()=>{const t=$("ptabs").querySelector('[aria-selected="true"]')||$("pbody").querySelector("input,button");t&&t.focus()},60)}
-function closeP(){if(!S.pOpen)return;if(S.pDirty&&!confirmLeave())return;S.pOpen=false;S.pDirty=false;S.gd=null;$("pmodal").classList.remove("on");$("pmodal").setAttribute("aria-hidden","true");document.documentElement.style.overflow="";lastFocus&&lastFocus.focus&&lastFocus.focus()}
+function closeP(){if(!S.pOpen)return;if(S.pDirty&&!confirmLeave())return;S.pOpen=false;S.pDirty=false;S.gd=null;S.avEdit=false;$("pmodal").classList.remove("on");$("pmodal").setAttribute("aria-hidden","true");document.documentElement.style.overflow="";lastFocus&&lastFocus.focus&&lastFocus.focus()}
 function confirmLeave(){const el=$("pbody").querySelector("[data-msg]");if(S.pWarned){S.pWarned=false;return true}S.pWarned=true;if(el){el.textContent="You have unsaved changes. Save, or press close again to discard."}return false}
-function inviteText(){const n=(S.profile||{}).name||"I";return `${n==="I"?"I'd":n+" would"} like to share my Morning Brief with you: a short daily reading list on AI, product design, tech, art direction and design leadership, picked by Claude every morning. No sign-up needed. Open the link, answer four quick questions, and the feed is sorted for you: ${PAGE_URL}`}
+function inviteText(){const n=(S.profile||{}).name||"I";return `I'd like to share my Morning Brief with you: a short daily reading list on AI, product design, tech, art direction and design leadership, picked by Claude every morning. No sign-up needed. Open the link, answer four quick questions, and the feed is sorted for you: ${PAGE_URL}`}
 async function copyText(t){try{await navigator.clipboard.writeText(t);return true}catch(e){return false}}
 function msg(k,t){const el=document.querySelector(`[data-msg="${k}"]`);if(el){el.textContent=t;setTimeout(()=>{if(el.textContent===t)el.textContent=""},4000)}}
 function render(){
@@ -910,12 +1032,23 @@ document.addEventListener("click",async e=>{
   if(e.target.closest("[data-close]")){closeSheet();return}
   if(e.target.closest("[data-profile]")){openP();return}
   if(e.target.closest("[data-pclose]")){closeP();return}
+  if(e.target.closest("#pmAvatar.edit")||e.target.closest("[data-avdone]")){S.avEdit=!S.avEdit&&!e.target.closest("[data-avdone]");paintPmAvatar(false);return}
+  const ae=e.target.closest("[data-avemo]");if(ae){const ok=await avSave({avatar:"emoji:"+ae.dataset.avemo});if(!ok)msg("av","Shown here, but couldn't be saved.");return}
+  const ab=e.target.closest("[data-avbg]");if(ab){const o=avSrc(),patch={avatarBg:ab.dataset.avbg};if(String(o.avatar||"").startsWith("img:"))patch.avatar="";const ok=await avSave(patch);if(!ok)msg("av","Shown here, but couldn't be saved.");return}
+  if(e.target.closest("[data-avclear]")){await avSave({avatar:"",avatarBg:""});return}
   const gs=e.target.closest("[data-gstep]");if(gs){const fm=gs.closest("form");if(fm)gFromForm(fm);const to=+gs.dataset.gstep;if(to>(S.gstep||0)&&(S.gstep||0)===0&&!gDraft().name){msg("guest","Add your name first.");const n=fm&&fm.querySelector("[name=g_name]");n&&n.focus();return}S.gstep=to;renderPModal();$("pbody").scrollTop=0;const f=$("pbody").querySelector("input,textarea");f&&f.focus();return}
   if(e.target.closest("[data-gskip]")){S.gSkipped=true;S.pDirty=false;closeP();const v={...(GU()||{}),skipped:true};S.mine.profile=v;if(db&&uid)db.collection("data/users/"+uid).doc("profile").set(v).catch(()=>{});return}
   if(e.target.closest("[data-greset]")){S.gd={name:(GU()||{}).name||"",role:(GU()||{}).role||"",priority:{}};S.gstep=0;S.ptab="welcome";S.pDirty=false;renderPModal();return}
   const pt=e.target.closest("[data-ptab]");if(pt){if(S.pDirty&&!confirmLeave())return;S.ptab=pt.dataset.ptab;S.pDirty=false;renderPModal();$("pbody").scrollTop=0;return}
   const cp=e.target.closest("[data-copy]");if(cp){const t=cp.dataset.copy==="link"?PAGE_URL:inviteText();const ok=await copyText(t);if(!ok){const b=document.querySelector(".copybox");if(b){b.value=t;b.focus();b.select()}}msg("copy",ok?"Copied.":"Select the text below and copy it.");return}
-  const cpk=e.target.closest("[data-catpick]");if(cpk){const kk=cpk.dataset.catpick,c=catOf(kk)||(T[kk]?{key:kk,name:T[kk],desc:"",color:TC[kk],icon:TIK[kk]||kk}:null);if(!c)return;S.catEdit=c.key;S.catDraft={name:c.name,desc:c.desc||"",color:c.color||SW[1],icon:c.icon||"book"};S.pDirty=false;renderPModal();const ce=$("pbody").querySelector(".ceditor");ce&&ce.scrollIntoView({block:"nearest",behavior:"smooth"});return}
+  const ap=e.target.closest("[data-addperson]");if(ap){const inp=ap.dataset.addperson==="share"?$("sharenewp"):ap.closest(".addp").querySelector("input");const name=(inp&&inp.value||"").trim();const mk=ap.dataset.addperson==="share"?"people":"cat";if(!name){msg(mk,"Type a name first.");inp&&inp.focus();return}
+    const pr=newPerson(name);const ok=await savePeople([...(S.people||[]),pr]);
+    if(ap.dataset.addperson!=="share"){const fm=ap.closest("form");if(fm)draftFromForm(fm);S.catDraft.vis="some";S.catDraft.people=[...(S.catDraft.people||[]),pr.id];S.pDirty=true}renderPModal();
+    msg(mk,ok?`Added ${name}.`:"Couldn't save. Try again.");return}
+  const cpp=e.target.closest("[data-copyp]");if(cpp){const pr=personOf(cpp.dataset.copyp);if(pr){const ok=await copyText(`Hi ${pr.name}, here's my Morning Brief, a short daily reading list picked by Claude. This link is just for you: ${personLink(pr)}`);msg("people",ok?`Copied ${pr.name}'s link and message.`:"Couldn't copy. Try again.")}return}
+  const dp=e.target.closest("[data-delp]");if(dp){const id=dp.dataset.delp,pr=personOf(id);if(!pr)return;if(dp.dataset.sure!=="1"){dp.dataset.sure="1";msg("people",`Tap the bin again to remove ${pr.name}. Their link stops working after the next update.`);setTimeout(()=>{dp.dataset.sure=""},5000);return}
+    await savePeople((S.people||[]).filter(p=>p.id!==id));for(const c of S.cats){if((c.people||[]).includes(id)){const nc={...c,people:c.people.filter(x=>x!==id)};try{await db.collection("categories").doc(c.key).set(nc)}catch(err){}}}renderPModal();msg("people",`Removed ${pr.name}.`);return}
+  const cpk=e.target.closest("[data-catpick]");if(cpk){const kk=cpk.dataset.catpick,c=catOf(kk)||(T[kk]?{key:kk,name:T[kk],desc:"",color:TC[kk],icon:TIK[kk]||kk}:null);if(!c)return;S.catEdit=c.key;S.catDraft={name:c.name,desc:c.desc||"",color:c.color||SW[1],icon:c.icon||"book",vis:c.visibility||"everyone",people:[...(c.people||[])]};S.pDirty=false;renderPModal();const ce=$("pbody").querySelector(".ceditor");ce&&ce.scrollIntoView({block:"nearest",behavior:"smooth"});return}
   if(e.target.closest("[data-catnew]")||e.target.closest("[data-catcancel]")){S.catEdit=null;S.catDraft=freshDraft();S.pDirty=false;renderPModal();const n=$("pbody").querySelector("[name=cname]");n&&n.focus();return}
   if(e.target.closest("[data-catbuiltin]")){msg("cat","Built-in folders can't be edited. Create your own with “New folder”.");return}
   const emb=e.target.closest("[data-emo]");if(emb){const fm=emb.closest("form");const inp=fm&&fm.querySelector("[name=cemoji]");if(inp){inp.value=emb.dataset.emo;draftFromForm(fm,inp);S.pDirty=true}return}
@@ -949,6 +1082,7 @@ document.addEventListener("click",async e=>{
 });
 document.addEventListener("input",e=>{const fm=e.target.closest("form.pf");if(fm&&fm.dataset.form==="cat"&&e.target.name!=="cimg"){S.pDirty=true;draftFromForm(fm,e.target);return}if(fm&&fm.dataset.form==="guest"){gFromForm(fm);if(!fm.classList.contains("gwiz"))S.pDirty=true;return}if(fm){S.pDirty=true;if(e.target.name==="count"){const o=fm.querySelector('[data-out="count"]');if(o)o.textContent=e.target.value}}});
 document.addEventListener("change",async e=>{
+  if(e.target.name==="avimg"&&e.target.files&&e.target.files[0]){const f=e.target.files[0];if(f.size>8e6){msg("av","That photo is too big. Use one under 8 MB.");return}try{const u=await readImage(f);const ok=await avSave({avatar:"img:"+u});if(!ok)msg("av","Shown here, but couldn't be saved.")}catch(err){msg("av","Couldn't read that photo. Try a JPG or PNG.")}return}
   if(e.target.name!=="cimg"||!e.target.files||!e.target.files[0])return;
   const f=e.target.files[0];if(f.size>5e6){msg("cat","That image is too big. Use one under 5 MB.");return}
   try{const u=await readImage(f);S.catDraft=S.catDraft||freshDraft();S.catDraft.icon="img:"+u;S.catDraft.mode="image";S.pDirty=true;const up=e.target.closest(".upl");if(up)up.querySelector(".ti").innerHTML=iconHTML(S.catDraft.icon);$("cprev").innerHTML=catPreview()}catch(err){msg("cat","Couldn't read that image. Try a PNG or JPG.")}
@@ -970,12 +1104,12 @@ document.addEventListener("submit",async e=>{
       if(kind==="about")["name","role","company","location","goal","target","projects","interests"].forEach(k=>P[k]=g(k));
       else{P.count=+g("count")||15;P.level=g("level")||"simple";P.must=+g("must")||3;P.howto=+g("howto");P.follow=g("follow");P.avoid=g("avoid");P.priority={};Object.keys(T).forEach(k=>{P.priority[k]=g("pr-"+k)||"normal"})}
       P.updatedAt=new Date().toISOString();
-      await db.doc("config/profile").set(P);S.profile=P;if(kind==="about"&&P.name)db.doc("meta/owner").set({name:P.name}).catch(()=>{});S.pDirty=false;okMsg="Saved. The next edition will follow this.";
+      await db.doc("config/profile").set(P);S.profile=P;if(kind==="about"&&P.name)db.doc("meta/owner").set({name:P.name,avatar:P.avatar||"",avatarBg:P.avatarBg||""}).catch(()=>{});S.pDirty=false;okMsg="Saved. The next edition will follow this.";
     }else if(kind==="cat"){
       const d=S.catDraft||{},name=String(d.name||"").trim();if(!name){msg("cat","Give the folder a name.");return}
       let key=S.catEdit;if(!key){key=slug(name)||"folder";if(T[key])key=key+"-"+Date.now().toString(36).slice(-3)}
       const prev=catOf(key)||{},now=new Date().toISOString();
-      const isB=BUILTIN.includes(key),c={...prev,key,name,desc:String(d.desc||"").trim(),color:d.color||SW[1],icon:d.icon||"book",custom:!isB,builtin:isB,created:prev.created||now,updatedAt:now};
+      const isB=BUILTIN.includes(key),c={...prev,key,name,desc:String(d.desc||"").trim(),color:d.color||SW[1],icon:d.icon||"book",custom:!isB,builtin:isB,visibility:d.vis||"everyone",people:d.vis==="some"?(d.people||[]):[],created:prev.created||now,updatedAt:now};
       await db.collection("categories").doc(key).set(c);
       S.cats=S.cats.filter(x=>x.key!==key).concat([c]);syncCats();
       okMsg=S.catEdit?`Saved "${name}".`:`Created "${name}". It's on your page now.`;S.catEdit=null;S.catDraft=freshDraft();S.pDirty=false;
@@ -1015,10 +1149,12 @@ render();
   db.collection("categories").limit(50).onSnapshot(s=>{S.cats=s.docs.map(d=>({id:d.id,...d.data()}));for(const k of Object.keys(T))if(!S.cats.some(c=>c.key===k)){if(BUILTIN.includes(k)){T[k]=DEF_T[k];TC[k]=DEF_TC[k];delete TIK[k]}else delete T[k]}syncCats();render()},()=>{});
   db.collection("skills").limit(100).onSnapshot(s=>{S.skills=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{});
   db.collection("sources").limit(300).onSnapshot(s=>{S.sources=s.docs.map(d=>({id:d.id,...d.data()}));if(S.view==="sources"||S.view==="skills")render()},()=>{});
-  db.doc("meta/owner").onSnapshot(d=>{if(d.exists){S.ownerName=(d.data()||{}).name||"";render()}},()=>{});
+  db.doc("meta/owner").onSnapshot(d=>{if(d.exists){const m=d.data()||{};S.ownerName=m.name||"";S.ownerAv=m;render();if(S.pOpen)renderPModal()}},()=>{});
   db.collection("digests").onSnapshot(s=>{const o={};s.docs.forEach(d=>o[d.id]=d.data());S.digests=o;render()},()=>{});
   try{const u=await claude.use("user");uid=u?await u.id():null;S.isOwner=u?!!(await u.isOwner()):false}catch(e){uid=null}
   if(S.isOwner)db.doc("config/profile").onSnapshot(d=>{S.profile=d.exists?d.data():{};render()},()=>{});
+  if(S.isOwner)db.doc("config/people").onSnapshot(d=>{S.people=d.exists?((d.data()||{}).list||[]):[];if(S.pOpen&&!S.pDirty)renderPModal()},()=>{});
+  db.doc("meta/access").onSnapshot(d=>{if(d.exists){S.access=d.data()||{};render()}},()=>{});
   render();
   if(uid)db.collection("data/users/"+uid).onSnapshot(s=>{const o={};s.docs.forEach(d=>o[d.id]=d.data());S.mine=o;render();if(!S.isOwner&&!S.gChecked){S.gChecked=true;const g=GU();if((!g||(!g.done&&!g.skipped))&&!S.gSkipped&&!S.pOpen){S.gstep=0;openP("welcome")}}},()=>{});
 })();

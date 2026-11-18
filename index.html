@@ -638,9 +638,9 @@ function profileSections(){
   sec.share=`<section class="psec" data-k="pf-share"><div class="pin">
    <div class="pfh"><span class="ti" style="--c:#ec5c9a">${TI("share")}</span><div><h3>Share & invite</h3><p class="lbl">Give friends, teammates or mentors your daily feed.</p></div></div>
    <ol class="steps2">
-    <li><b>Open this page on claude.ai</b> and press <b>Share</b> (top right).</li>
-    <li><b>Add them by email</b> and set their access to <b>Contributor</b>. Contributor lets them save their own answers and read marks. Viewers can only look.</li>
-    <li><b>Send them the link</b> with the message below. After signing in to Claude with that email, they land on your feed and answer four quick questions.</li>
+    <li><b>Copy the link</b> or the invite message below.</li>
+    <li><b>Send it</b> by message, email or post it anywhere. It's a public website, so no Claude account or sign-in is needed.</li>
+    <li><b>They open it</b>, answer four quick questions, and see your feed sorted for them.</li>
    </ol>
    <div class="acts">
     <button type="button" class="cta" data-copy="link">Copy link<span class="ci"><svg class="i" viewBox="0 0 24 24">${TP.link}</svg></span></button>
@@ -648,7 +648,7 @@ function profileSections(){
     <span class="lbl" data-msg="copy"></span>
    </div>
    <textarea class="copybox" readonly rows="3" aria-label="Invite message">${esc(inviteText())}</textarea>
-   <div class="why" style="--c:#ec5c9a"><b>What people you invite get</b>The daily stories, folders, archive, sources and skill map. Their read, saved and skill ratings are private to them. When they first open it, they answer four questions (name, which folders matter, how they like to read, anything they want more of). Their feed is then sorted for them. Their answers are private, even from you. Only you can change your profile, algorithm, folders and sources.</div>
+   <div class="why" style="--c:#ec5c9a"><b>What people you invite get</b>Today's stories, folders, archive, sources and skill map, updated every morning. Their answers, reads and saves stay in their own browser. Nobody else can see them, you included. Your profile, goal and algorithm settings stay here, private to you.</div>
   </div></section>`;
   return {sec,ro,mineN:mine.length,catN:Object.keys(T).length};
 }
@@ -800,7 +800,7 @@ function renderPModal(){
 function openP(tab){S.pOpen=true;S.ptab=tab||S.ptab||"about";S.pDirty=false;lastFocus=document.activeElement;renderPModal();$("pmodal").classList.add("on");$("pmodal").setAttribute("aria-hidden","false");document.documentElement.style.overflow="hidden";setTimeout(()=>{const t=$("ptabs").querySelector('[aria-selected="true"]')||$("pbody").querySelector("input,button");t&&t.focus()},60)}
 function closeP(){if(!S.pOpen)return;if(S.pDirty&&!confirmLeave())return;S.pOpen=false;S.pDirty=false;S.gd=null;$("pmodal").classList.remove("on");$("pmodal").setAttribute("aria-hidden","true");document.documentElement.style.overflow="";lastFocus&&lastFocus.focus&&lastFocus.focus()}
 function confirmLeave(){const el=$("pbody").querySelector("[data-msg]");if(S.pWarned){S.pWarned=false;return true}S.pWarned=true;if(el){el.textContent="You have unsaved changes. Save, or press close again to discard."}return false}
-function inviteText(){const n=(S.profile||{}).name||"I";return `${n==="I"?"I'd":n+" would"} like to share my Morning Brief with you: a daily, hand-picked reading list on AI, product design, tech, art direction and design leadership, picked by Claude every morning. Open the link and sign in to Claude with this email address. You'll answer four quick questions so the feed is sorted for you: ${PAGE_URL}`}
+function inviteText(){const n=(S.profile||{}).name||"I";return `${n==="I"?"I'd":n+" would"} like to share my Morning Brief with you: a short daily reading list on AI, product design, tech, art direction and design leadership, picked by Claude every morning. No sign-up needed. Open the link, answer four quick questions, and the feed is sorted for you: ${PAGE_URL}`}
 async function copyText(t){try{await navigator.clipboard.writeText(t);return true}catch(e){return false}}
 function msg(k,t){const el=document.querySelector(`[data-msg="${k}"]`);if(el){el.textContent=t;setTimeout(()=>{if(el.textContent===t)el.textContent=""},4000)}}
 function render(){

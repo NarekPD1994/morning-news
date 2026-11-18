@@ -761,14 +761,14 @@ function draftFromForm(fm,t){
   if(d.mode==="emoji"){const e=fm.querySelector('[name=cemoji]').value.trim();if(e)d.icon="emoji:"+[...e].slice(0,4).join("")}
   $("cprev").innerHTML=catPreview();
 }
-function readImage(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const sz=128,c=document.createElement("canvas");c.width=c.height=sz;const x=c.getContext("2d"),w=im.naturalWidth||im.width||sz,h=im.naturalHeight||im.height||sz,m=Math.min(w,h);x.drawImage(im,(w-m)/2,(h-m)/2,m,m,0,0,sz,sz);let u=c.toDataURL("image/webp",.85);if(!u.startsWith("data:image/webp"))u=c.toDataURL("image/png");res(u)};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
+function readImage(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const sz=128,c=document.createElement("canvas");c.width=c.height=sz;const x=c.getContext("2d"),w=im.naturalWidth||im.width||sz,h=im.naturalHeight||im.height||sz,m=Math.min(w,h);x.drawImage(im,(w-m)/2,(h-m)/2,m,m,0,0,sz,sz);let u=c.toDataURL("image/webp",.85);if(!u.startsWith("data:image/webp"))u=c.toDataURL("image/jpeg",.88);res(u)};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
 /* ---------- guests: onboarding, private profile, re-ranked feed ---------- */
 const GU=()=>S.isOwner?null:(S.mine.profile||S.gLocal||null);
 const PRW={high:0,normal:1};
 const hiddenT=i=>{if(!canSeeTopic(i.topic))return true;const g=GU();return !!(g&&g.priority&&g.priority[i.topic]==="off")};
 const vis=a=>a.filter(i=>!hiddenT(i));
 const ownerName=()=>S.ownerName||"Narek";
-const gDraft=()=>S.gd||(S.gd={name:(S.access||{}).name||"",...(GU()||{}),priority:{...((GU()||{}).priority||{})}});
+const gDraft=()=>S.gd||(S.gd=(({avatar,avatarBg,...r})=>({name:(S.access||{}).name||"",...r,priority:{...(r.priority||{})}}))(GU()||{}));
 function gFromForm(fm){
   const d=gDraft(),F=new FormData(fm);
   ["name","role","more"].forEach(k=>{if(fm.querySelector(`[name="g_${k}"]`))d[k]=String(F.get("g_"+k)||"").trim()});
@@ -819,7 +819,7 @@ function guestAbout(){
   </div></section>`;
 }
 async function saveGuest(d,okText){
-  const v={...d,done:true,updatedAt:new Date().toISOString()};
+  const cur=GU()||{},v={...cur,...d,avatar:cur.avatar||"",avatarBg:cur.avatarBg||"",done:true,skipped:false,updatedAt:new Date().toISOString()};
   S.gLocal=v;S.gd=null;S.pDirty=false;
   let saved=false;
   if(db&&uid){try{await db.collection("data/users/"+uid).doc("profile").set(v);S.mine.profile=v;saved=true}catch(e){}}
